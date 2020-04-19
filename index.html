@@ -1,0 +1,58 @@
+
+<script>
+
+  var galleryFeed = new Instafeed({
+  get: "user",
+  userId: 3270261777,
+  accessToken:
+    "your acces token",
+  resolution: "standard_resolution",
+  useHttp: "true",
+  limit: 2000,
+  template: '<div class="col-lg-3 col-md-3 col-sm-12 element-item latest"><div class="our-project"><div class="img"><a class="test-popup-link" href="{{image}}"><img src="{{image}}" alt="{{caption}}" class="img-fluid" /> </a></div><div class="title py-4"><h4 class="text-uppercase"></h4><span class="text-secondary"></span></div></div></div>',
+  target: "instafeed-gallery-feed",
+  after: function() {
+     popup();
+    if (!this.hasNext()) {
+      btnInstafeedLoad.setAttribute('disabled', 'disabled');
+    }
+  },
+  success:function(){
+    popup();
+  }
+  
+});
+
+galleryFeed.run();
+
+var btnInstafeedLoad = document.getElementById("loadmore");
+btnInstafeedLoad.addEventListener("click", function() {
+  galleryFeed.next()
+});
+
+function popup(){
+  let $btns = $(".project-area .button-group button");
+
+  $btns.click(function (e) {
+    $(".project-area .button-group button").removeClass("active");
+    e.target.classList.add("active");
+
+    let selector = $(e.target).attr("data-filter");
+    $(".project-area .grid").isotope({
+      filter: selector,
+    });
+
+    return false;
+  });
+
+  $(".project-area .button-group #btn1").trigger("click");
+
+  $(".project-area .grid .test-popup-link").magnificPopup({
+    type: "image",
+    gallery: { enabled: true },
+  });
+}
+
+</script>
+<script src="<?php echo get_template_directory_uri(); ?>/js/main.js"></script>
+
